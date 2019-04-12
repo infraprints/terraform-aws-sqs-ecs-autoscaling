@@ -1,0 +1,15 @@
+---
+name: Terraform AWS ECS Autoscaling by SQS
+slug: sqs-ecs-autoscaling
+project: infraprints
+namespace: [terraform, aws]
+description: Describes a container auto-scaling policy controlled by an SQS resource.
+license:
+  name: MIT
+tags:
+  - infrastructure
+  - aws
+  - aws-sqs
+  - aws-ecs
+  - aws-cloudwatch-alarms
+  - autoscaling
