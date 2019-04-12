@@ -1,5 +1,5 @@
 ---
-name: Terraform AWS ECS Autoscaling by SQS
+name: AWS ECS Autoscaling by SQS
 slug: sqs-ecs-autoscaling
 project: infraprints
 namespace: [terraform, aws]
