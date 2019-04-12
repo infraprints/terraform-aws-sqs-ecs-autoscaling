@@ -10,7 +10,4 @@ tags:
   - terraform
   - terraform-module
   - aws
-  - aws-sqs
-  - aws-ecs
-  - aws-cloudwatch
-  - autoscaling
+  - 
