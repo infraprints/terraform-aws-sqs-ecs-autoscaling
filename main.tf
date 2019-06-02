@@ -50,15 +50,7 @@ resource "aws_cloudwatch_metric_alarm" "scale" {
   comparison_operator = "GreaterThanOrEqualToThreshold"
   threshold           = "1"
   evaluation_periods  = "1"
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibilty in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  alarm_actions = [aws_appautoscaling_policy.sqs.arn]
+  alarm_actions       = [aws_appautoscaling_policy.sqs.arn]
 
   metric_query {
     id          = "e1"
@@ -116,21 +108,13 @@ resource "aws_appautoscaling_policy" "scale" {
   service_namespace  = "ecs"
 
   step_scaling_policy_configuration {
-    adjustment_type         = var.adjustment_type
-    cooldown                = var.cooldown
+    adjustment_type         = "ChangeInCapacity"
+    cooldown                = 60
     metric_aggregation_type = "Maximum"
-    dynamic "step_adjustment" {
-      for_each = var.step_adjustments
-      content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
 
-        metric_interval_lower_bound = lookup(step_adjustment.value, "metric_interval_lower_bound", null)
-        metric_interval_upper_bound = lookup(step_adjustment.value, "metric_interval_upper_bound", null)
-        scaling_adjustment          = step_adjustment.value.scaling_adjustment
-      }
+    step_adjustment {
+      metric_interval_upper_bound = 0
+      scaling_adjustment          = -1
     }
   }
 
@@ -146,24 +130,15 @@ resource "aws_appautoscaling_policy" "empty" {
   policy_type        = "StepScaling"
 
   step_scaling_policy_configuration {
-    adjustment_type         = "ExactCapacity"
-    cooldown                = var.cooldown
+    adjustment_type         = "ChangeInCapacity"
+    cooldown                = 60
     metric_aggregation_type = "Maximum"
-    dynamic "step_adjustment" {
-      for_each = var.scale_down_adjustment
-      content {
-        # TF-UPGRADE-TODO: The automatic upgrade tool can't predict
-        # which keys might be set in maps assigned here, so it has
-        # produced a comprehensive set here. Consider simplifying
-        # this after confirming which keys can be set in practice.
 
-        metric_interval_lower_bound = lookup(step_adjustment.value, "metric_interval_lower_bound", null)
-        metric_interval_upper_bound = lookup(step_adjustment.value, "metric_interval_upper_bound", null)
-        scaling_adjustment          = step_adjustment.value.scaling_adjustment
-      }
+    step_adjustment {
+      metric_interval_upper_bound = 0
+      scaling_adjustment          = -1
     }
   }
 
   depends_on = [aws_appautoscaling_target.default]
 }
-
