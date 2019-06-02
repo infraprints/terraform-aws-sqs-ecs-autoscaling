@@ -36,7 +36,7 @@ resource "aws_appautoscaling_policy" "empty" {
   scalable_dimension = "ecs:service:DesiredCount"
   policy_type        = "StepScaling"
 
- step_scaling_policy_configuration {
+  step_scaling_policy_configuration {
     adjustment_type         = "ChangeInCapacity"
     cooldown                = 60
     metric_aggregation_type = "Maximum"
