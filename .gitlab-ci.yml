@@ -11,6 +11,9 @@ stages:
   - "Package"
   - "Deploy"
 
+variables:
+  AWS_REGION: us-east-1
+
 validate:
   stage: "Validate"
   script:
